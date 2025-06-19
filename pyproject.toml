@@ -1,0 +1,17 @@
+[project]
+name = "comfyui_lama_with_refiner"
+description = "Nodes for lama+refiner inpainting with ComfyUI."
+version = "1.0.0"
+license = { file = "LICENSE" }
+
+[project.urls]
+Repository = "https://github.com/fplu/comfyui_lama_with_refiner"
+
+[tool.black]
+line-length = 100
+preview = true
+
+[tool.comfy]
+PublisherId = "fplu"
+DisplayName = "lama_with_refiner"
+Icon = ""
