@@ -222,11 +222,7 @@ def _infer(
                 del loss
                 del pred
 
-        # The prediction may not have the exact same histogram as the original image.
-        # To avoid the appearance of unsightly borders, I (François) arbitrarily chose
-        # to use the prediction directly instead of the formula:
-        # inpainted = mask * pred + (1 - mask) * image
-        inpainted = pred
+        inpainted = mask * pred + (1 - mask) * image
         inpainted = inpainted.detach().cpu()
         return inpainted
 
@@ -289,11 +285,11 @@ def refine_predict(
     inpainter: torch.nn.Module,
     gpu_ids: str = "0",
     modulo: int = 8,
-    n_iters: int = 25,
+    n_iters: int = 15,
     lr: float = 0.002,
     min_side: int = 512,
     max_scales: int = 5,
-    px_budget: int = 9000000,
+    px_budget: int = 3000000,
 ):
     """Refines the inpainting of the network
 
@@ -324,7 +320,7 @@ def refine_predict(
         inpainted image of size (1,3,H,W)
     """
     inpainter = inpainter
-    # assert not inpainter.training
+    assert not inpainter.training
     # assert not inpainter.add_noise_kwargs
     # assert inpainter.concat_mask
 

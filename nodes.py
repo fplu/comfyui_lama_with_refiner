@@ -47,7 +47,17 @@ class LoadInpaintLaMaModel:
             model = ModelLoader().load_from_state_dict(sd)
             device = get_torch_device()
             model.to(device)
+            # We deliberately do two seemingly conflicting things here:
+            #  - `make_tensor_ready_for_training(...)` turns on gradient tracking so we
+            #     can run autograd during the refinement loop that follows.
+            #  - `model.eval()` forces the network into inference mode so that
+            #     * BatchNorm layers use their running (population) statistics instead of
+            #       recalculating per-image means/vars, and
+            #     * Dropout (if any) is disabled.
+            #
+            # This combo—"gradients ON, inference behaviour ON"— is necessarry for inference with refinement.
             make_tensor_ready_for_training(model.model.get_submodule("model.model"))
+            model.eval()
             return (model,)
 
 
