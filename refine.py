@@ -214,11 +214,7 @@ def _infer(
             )
 
             loss = sum(losses.values())
-            pbar.set_description(
-                "Refining scale {} using scale {} ...current loss: {:.4f}".format(
-                    scale_ind + 1, scale_ind, loss.item()
-                )
-            )
+
             if idi < n_iters - 1:
                 loss.backward()
                 optimizer.step()
