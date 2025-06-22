@@ -70,6 +70,7 @@ class InpaintWithLamaRefinerModel:
                 "image": ("IMAGE",),
                 "mask": ("MASK",),
                 "seed": ("INT", {"default": 0, "min": 0, "max": 0xFFFFFFFFFFFFFFFF}),
+                "px_budget": ("INT", {"default": 800000, "min": 10000, "max": 10000000}),
             },
         }
 
@@ -83,6 +84,7 @@ class InpaintWithLamaRefinerModel:
         image: Tensor,
         mask: Tensor,
         seed: int,
+        px_budget: int,
     ):
         image, mask = to_lama(image, mask)
 
@@ -110,7 +112,7 @@ class InpaintWithLamaRefinerModel:
 
             model = inpaint_model.model.get_submodule("model.model")
             with torch.inference_mode(False):
-                res = refine_predict(batch, model)
+                res = refine_predict(batch, model, px_budget=px_budget)
 
             batch_image.append(res)
             pbar.update(1)

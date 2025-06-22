@@ -289,7 +289,7 @@ def refine_predict(
     lr: float = 0.002,
     min_side: int = 512,
     max_scales: int = 5,
-    px_budget: int = 3000000,
+    px_budget: int = 800000,
 ):
     """Refines the inpainting of the network
 
